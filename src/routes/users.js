@@ -2,9 +2,23 @@ const express = require('express');
 const router = express.Router();
 const users = require('../data/users');
 
+const FUTURE_FLAG = process.env.FUTURE_FLAG === 'true';
+
+function getUsersV1() {
+  return users;
+}
+
+function getUsersV2() {
+  return users.map(u => ({
+    ...u,
+    surnom: u.role == 'admin' ? 'zizi' : 'zozo'
+  }));
+}
+
 // GET /api/users
 router.get('/', (req, res) => {
-  res.json(users);
+    const data = FUTURE_FLAG ? getUsersV2() : getUsersV1();
+  res.json(data);
 });
 
 // GET /api/users/:id
